@@ -1,16 +1,44 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { getExpenses, type Expense } from "@/lib/expense-store";
+import ExpenseSummary from "@/components/ExpenseSummary";
+import ExpenseForm from "@/components/ExpenseForm";
+import ExpenseList from "@/components/ExpenseList";
+import { Wallet } from "lucide-react";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+export default function Index() {
+  const [expenses, setExpenses] = useState<Expense[]>(getExpenses);
+
+  const handleAdd = (expense: Expense) => {
+    setExpenses((prev) => [expense, ...prev]);
+  };
+
+  const handleDelete = (id: string) => {
+    setExpenses((prev) => prev.filter((e) => e.id !== id));
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="gradient-primary text-primary-foreground">
+        <div className="max-w-2xl mx-auto px-4 py-8">
+          <div className="flex items-center gap-3">
+            <div className="bg-primary-foreground/20 rounded-xl p-2.5">
+              <Wallet className="w-6 h-6" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-extrabold tracking-tight">Track Your PKR</h1>
+              <p className="text-primary-foreground/70 text-sm">Apne kharche track karein</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Content */}
+      <main className="max-w-2xl mx-auto px-4 -mt-2 pb-12 space-y-5">
+        <ExpenseSummary expenses={expenses} />
+        <ExpenseForm onAdd={handleAdd} />
+        <ExpenseList expenses={expenses} onDelete={handleDelete} />
+      </main>
     </div>
   );
-};
-
-const Index = PlaceholderIndex;
-
-export default Index;
+}
